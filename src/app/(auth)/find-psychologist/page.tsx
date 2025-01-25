@@ -8,7 +8,6 @@ import { useUserPsychologists } from '@/hooks/useUserList';
 const FindPsychologist = () => {
   const { userData } = useUser(); // Obtener el rol del usuario
   const { userPsychologists, loading, error } = useUserPsychologists(); // Usar el hook
-
   const router = useRouter();
 
   // Evitar que el código dependa de `userData` hasta que esté disponible en el cliente
@@ -19,6 +18,29 @@ const FindPsychologist = () => {
     }
   }, [userData, router]);
 
+  // Función para enviar el correo con los datos
+  const sendEmail = async (psychologistId: number, clientEmail: string) => {
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ psychologistId, clientEmail }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Correo enviado con éxito');
+      } else {
+        alert('Hubo un problema al enviar el correo');
+      }
+    } catch (error) {
+      console.error("Error al enviar el correo:", error);
+      alert('Error al enviar el correo');
+    }
+  };
+
   return (
     <div>
       <h1 className='mb-2 text-black'>Encuentra un Psicólogo</h1>
@@ -27,9 +49,16 @@ const FindPsychologist = () => {
       {userPsychologists.length > 0 ? (
         <ul>
           {userPsychologists.map((psychologist) => (
-            <li className='cursor-pointer  w-[20%] text-black' key={psychologist.id}>
-              <h3> Nombre del psicologo {psychologist.full_name}</h3>
-              <button>Ver detalles</button>
+            <li className='cursor-pointer w-[20%] text-black' key={psychologist.id}>
+              <h3> Nombre del psicólogo: {psychologist.full_name}</h3>
+              <button
+                onClick={() => {
+                  const clientEmail = userData?.email || ''; // Asumir que userData tiene el email
+                  sendEmail(psychologist.id, clientEmail);
+                }}
+              >
+                Ver detalles
+              </button>
             </li>
           ))}
         </ul>
