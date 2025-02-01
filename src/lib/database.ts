@@ -156,3 +156,24 @@ export const addPsychologist = async (
     return data;
   };
   
+  export const getUserById = async (userId: string) => {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", userId)
+      .single();  // Devuelve solo un resultado (un único usuario)
+    if (error) throw new Error(error.message);
+    return data;
+  };
+
+
+  // Obtener los datos de un psicólogo por su ID
+export const getPsychologistById = async (psychologistId: string) => {
+  const { data, error } = await supabase
+    .from("psychologists")
+    .select("*")
+    .eq("user_id", psychologistId)
+    .single();  // Devuelve solo un resultado (un único psicólogo)
+  if (error) throw new Error(error.message);
+  return data;
+};

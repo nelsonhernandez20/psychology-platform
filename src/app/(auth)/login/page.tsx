@@ -27,19 +27,21 @@ const LoginPage = () => {
         password
       );
       const user = userCredential.user;
-      console.log(user.email, 'que trae user');
       // Buscamos el usuario en Supabase después de la autenticación
-      const userData = await fetchUserData(user.email);
-      console.log(userData, 'que trae userData');
+      if (user.email) {
+        const userData = await fetchUserData(user.email);
+        setUserData(userData);
+      } else {
+        throw new Error("User email is null");
+      }
       // Guardamos los datos en el contexto
-      setUserData(userData);
 
       // Redirigir según el rol
-      if (userData.role === "psychologist") {
-        router.push("/psychologist/dashboard");
-      } else {
+      // if (userData.role === "psychologist") {
+      //   router.push("/psychologist/dashboard");
+      // } else {
         router.push("/find-psychologist");
-      }
+      // }
     } catch (err: any) {
       setError("Hubo un error al iniciar sesión. Intenta de nuevo.");
     } finally {
@@ -96,7 +98,7 @@ const LoginPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             />
           </div>
 
@@ -113,7 +115,7 @@ const LoginPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             />
           </div>
 

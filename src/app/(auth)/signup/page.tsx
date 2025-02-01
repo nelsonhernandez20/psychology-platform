@@ -34,11 +34,9 @@ const SignUpPage = () => {
 
       // Guardar datos en la tabla de usuarios
       const user: any | null = await addUser(fullName, email, password, role);
-      console.log(user,'que traes user');
       if (!user) {
         throw new Error("Failed to create user");
       }
-      console.log(user[0].id, 'que trae user.id register');
       if (role === "psychologist" && user) {
         // Guardar datos del psicólogo solo si el rol es psicólogo
         const psychologistData: any = await addPsychologist(
